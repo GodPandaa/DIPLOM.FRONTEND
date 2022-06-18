@@ -1,42 +1,47 @@
 ﻿@page "/fetchdata"
 @inject HttpClient Http
 
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
-
-@if (customers == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Lastname</th>
-                <th>Education</th>
-                <th>Salary</th>
-                <th>Profession</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in customers)
+<div class="container">
+    <div class="row">
+        <div class="col"><h1>Список соискателей</h1></div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @if (customers == null)
             {
-            <tr>
-                <td>@customer.Name</td>
-                <td>@customer.Surname</td>
-                <td>@customer.Lastname</td>
-                <td>@customer.Education</td>
-                <td>@customer.Salary</td>
-                <td>@customer.Profession</td>
-            </tr>
+                <p><em>Загрузка...</em></p>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Surname</th>
+                            <th>Lastname</th>
+                            <th>Education</th>
+                            <th>Salary</th>
+                            <th>Profession</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var customer in customers)
+                        {
+                            <tr>
+                                <td>@customer.Name</td>
+                                <td>@customer.Surname</td>
+                                <td>@customer.Lastname</td>
+                                <td>@customer.Education</td>
+                                <td>@customer.Salary</td>
+                                <td>@customer.Profession</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
 
@@ -44,8 +49,8 @@ else
     private List<Customer> customers;
 
     protected override async Task OnInitializedAsync()
-    { 
-    customers = await Http.GetFromJsonAsync<List<Customer>>("https://localhost:5005/api/Customers");
+    {
+        customers = await Http.GetFromJsonAsync<List<Customer>>("https://localhost:5005/api/Customers");
     }
 
     public class Customer
@@ -63,5 +68,5 @@ else
         public string Education { get; set; }
     }
 
-    
+
 }
