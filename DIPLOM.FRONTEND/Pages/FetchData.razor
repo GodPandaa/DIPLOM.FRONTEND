@@ -1,0 +1,67 @@
+﻿@page "/fetchdata"
+@inject HttpClient Http
+
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Surname</th>
+                <th>Lastname</th>
+                <th>Education</th>
+                <th>Salary</th>
+                <th>Profession</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+            <tr>
+                <td>@customer.Name</td>
+                <td>@customer.Surname</td>
+                <td>@customer.Lastname</td>
+                <td>@customer.Education</td>
+                <td>@customer.Salary</td>
+                <td>@customer.Profession</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+
+    private List<Customer> customers;
+
+    protected override async Task OnInitializedAsync()
+    { 
+    customers = await Http.GetFromJsonAsync<List<Customer>>("https://localhost:5005/api/Customers");
+    }
+
+    public class Customer
+    {
+        public string Name { get; set; }
+
+        public string Surname { get; set; }
+
+        public string Lastname { get; set; }
+
+        public string Profession { get; set; }
+
+        public int Salary { get; set; }
+
+        public string Education { get; set; }
+    }
+
+    
+}
