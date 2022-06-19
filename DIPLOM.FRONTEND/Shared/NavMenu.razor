@@ -9,21 +9,27 @@
             <div class="navbar-collapse @NavMenuCssClass" @onclick="ToggleNavMenu">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <NavLink class="nav-link" Match="NavLinkMatch.All" aria-current="page" href="">Home</NavLink>
+                        <NavLink class="nav-link" Match="NavLinkMatch.All" aria-current="page" href="">Главная</NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="counter">Counter</NavLink>
+                        <NavLink class="nav-link" href="vacancy">Вакансии</NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="fetchdata">Fetch data</NavLink>
+                        <NavLink class="nav-link" href="resume">Создать резюме</NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="about">О НАС</NavLink>
+                        <NavLink class="nav-link" href="new-vacancy">Создать вакансию</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="about">О нас</NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="fetchdata">Список соискателей</NavLink>
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <input class="form-control me-2" type="search" placeholder="Начни поиск здесь..." aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Поиск</button>
                 </form>
             </div>
         </div>

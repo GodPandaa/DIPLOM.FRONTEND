@@ -1,0 +1,81 @@
+﻿@page "/new-vacancy"
+
+@inject HttpClient Http
+
+@using System.ComponentModel.DataAnnotations
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Создание вакансии</h3>
+            <p>Размести свою вакансию для целого мира!</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="wrapperForm">
+                <EditForm Model="@vacancyEmployer" OnValidSubmit="@AddNewVacancy">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <label for="vacancyEmployerWages" class="form-label">Введите зарплату</label>
+                        <InputNumber @bind-Value="@vacancyEmployer.Wages" type="number" class="form-control" id="vacancyEmployerWages" placeholder="1 000 000$ в тенге"></InputNumber>
+                        <ValidationMessage For="() => vacancyEmployer.Wages" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="vacancyEmployerPost" class="form-label">Введите должность</label>
+                        <InputText @bind-Value="@vacancyEmployer.Post" type="text" class="form-control" id="vacancyEmployerPost" placeholder="Механик"></InputText>
+                        <ValidationMessage For="() => vacancyEmployer.Post" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="vacancyEmployerActive" class="form-label">Статус вакансии</label>
+                        <InputCheckbox @bind-Value="@vacancyEmployer.Active"></InputCheckbox> 
+                    </div>
+                    <button disabled="@(!context.IsModified() || !context.Validate())" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary">Отправить вакансию</button>
+                </EditForm>
+            </div>
+            <div class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Успешно</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Ваша вакансия создана!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private const string ServiceEndpoint = "https://localhost:5005/api/Vacancies/";
+
+    VacancyEmployer vacancyEmployer = new VacancyEmployer();
+
+    private async Task AddNewVacancy()
+    {
+        var addVacancy = new VacancyEmployer
+            {
+                Wages = vacancyEmployer.Wages,
+                Post = vacancyEmployer.Post,
+                Active = vacancyEmployer.Active
+            };
+        await Http.PostAsJsonAsync(ServiceEndpoint, addVacancy);
+    }
+
+    public class VacancyEmployer
+    {
+        [Required(ErrorMessage="За бесплатно работать не будут!")]
+        public int Wages { get; set; } // зарплата
+        [Required(ErrorMessage="Без должности не заключить контракт!")]
+        public string Post { get; set; } //должность
+
+        public bool Active { get; set; } // Статус вакансии
+    }
+}

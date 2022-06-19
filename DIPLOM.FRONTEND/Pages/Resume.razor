@@ -1,0 +1,105 @@
+﻿@page "/resume"
+
+@inject HttpClient Http
+
+@using System.ComponentModel.DataAnnotations
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Создание резюме</h3>
+            <p>Твое резюме будет доступно для просмотра целому миру!</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="wrapperForm">
+                <EditForm Model="@customerResume" OnValidSubmit="@AddNewResume">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <label for="formControlName" class="form-label">Введите свое имя</label>
+                        <InputText @bind-Value="@customerResume.Name" type="text" class="form-control" id="formControlName" placeholder="Иван"></InputText>
+                        <ValidationMessage For="() => customerResume.Name"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formControlLastname" class="form-label">Введите свою фамилию</label>
+                        <InputText @bind-Value=customerResume.Lastname type="text" class="form-control" id="formControlLastname" placeholder="Иванов"></InputText>
+                        <ValidationMessage For="() => customerResume.Lastname"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formControlSurname" class="form-label">Введите свое отчество</label>
+                        <InputText @bind-Value="customerResume.Surname" type="text" class="form-control" id="formControlSurname" placeholder="Иванович"></InputText>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formControlProfession" class="form-label">Введите чем хотите заниматься</label>
+                        <InputText @bind-Value="customerResume.Profession" type="text" class="form-control" id="formControlProfession" placeholder="Моряк-вездеход"></InputText>
+                        <ValidationMessage For="() => customerResume.Profession"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formControlSalary" class="form-label">Введите желаемую зарплату</label>
+                        <InputNumber @bind-Value="customerResume.Salary" type="number" class="form-control" id="formControlSalary" placeholder="1 000 000$ в тенге"></InputNumber>
+                        <ValidationMessage For="() => customerResume.Salary"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formControlEducation" class="form-label">Введите своё образование</label>
+                        <InputText @bind-Value="customerResume.Education" type="text" class="form-control" id="formControlEducation" placeholder="Злокачественное"></InputText>
+                        <ValidationMessage For="() => customerResume.Education"/>
+                    </div>
+                    <button disabled="@(!context.IsModified() || !context.Validate())" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary">Отправить резюме</button>
+                </EditForm>
+            </div>
+            <div class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Успешно</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Ваше резюме отправлено!</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private const string ServiceEndpoint = "https://localhost:5005/api/Customers/";
+
+    CustomerResume customerResume = new CustomerResume();
+
+    private async Task AddNewResume()
+    {
+        var addCustomerResume = new CustomerResume
+            {
+                Name = customerResume.Name,
+                Surname = customerResume.Surname,
+                Lastname = customerResume.Lastname,
+                Profession = customerResume.Profession,
+                Salary = customerResume.Salary,
+                Education = customerResume.Education
+            };
+        await Http.PostAsJsonAsync(ServiceEndpoint, addCustomerResume);
+    }
+
+    public class CustomerResume
+    {
+        [Required(ErrorMessage="Поле Имя должно быть заполнено!")]
+        public string Name { get; set; }
+        public string Surname { get; set; }
+
+        [Required(ErrorMessage="Поле Фамилия должно быть заполнено!")]
+        public string Lastname { get; set; }
+        [Required(ErrorMessage="Поле Профессия должно быть заполнено!")]
+        public string Profession { get; set; }
+        [Range(1, 100000, ErrorMessage = "Зажрался, брат (1-100000).")]
+        public int Salary { get; set; }
+        [Required(ErrorMessage="Поле Имя должно быть заполнено!")]
+        public string Education { get; set; }
+    }
+}
