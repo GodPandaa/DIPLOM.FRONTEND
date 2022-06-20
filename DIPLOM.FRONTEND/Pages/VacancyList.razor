@@ -1,40 +1,46 @@
-﻿@page "/vacancy/{Id:guid?}"
+﻿@page "/vacancy/{IdVacancy:guid?}"
 
 @using Vacancy
 
-@{
-    if(IdVacancyList == Guid.Empty)
-    {
-        <div class="container">
+<div class="container">
+    @{
+        if (!IssetGuid)
+        {
             <div class="row">
                 <div class="col">
                     <h3>Все вакансии</h3>
                     <p>Все доступные вакансии!</p>
                 </div>
             </div>
-            <div class="row">
-                <Vacancies />
-            </div>
-        </div>
-    } 
-    else
-    {
-        <div class="container">
+            <Vacancies />
+        }
+        else
+        {
             <div class="row">
                 <div class="col">
-                    <h3>Вакансия ""</h3>
-                    <p>ОПИСАНИЕ</p>
+                    <h3>Вакансия "@VacancyName"</h3>
                 </div>
             </div>
-            <div class="row">
-                <Vacancies SelectedVacancy="@IdVacancyList" />
-            </div>
-        </div>
+            <Vacancies SelectedVacancy="@IdVacancy" EventData="RenderEventDataVacancy" />
+        }
     }
-}
-
+</div>
 @code {
     [Parameter]
-    public Guid? IdVacancyList { get; set; } = new Guid("00000000-0000-0000-0000-000000000000");
+    public Guid IdVacancy { get; set; } = Guid.Empty;
 
+    private string VacancyName { get; set; } = null;
+
+    private bool IssetGuid { get; set; } = false;
+
+    private void RenderEventDataVacancy(string Name)
+    {
+        VacancyName = Name;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnInitializedAsync();
+        IssetGuid = (IdVacancy.ToString() != null && IdVacancy != Guid.Empty) ? true : false;
+    }
 }
